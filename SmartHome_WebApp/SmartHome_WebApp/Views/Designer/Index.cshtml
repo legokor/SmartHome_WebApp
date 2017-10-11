@@ -1,0 +1,572 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+
+    body {
+        font-family: arial;
+        margin: 20px; /* for IE6 / IE7 */
+        background-color: #DCDCDC;
+    }
+
+
+
+
+    /* drag container */
+    #main_container {
+        margin: auto;
+        width: "100%";
+        height: "100%";
+    }
+        /* container for the left table */
+        #main_container #left {
+            width: 20%;
+            height: 20%;
+            float: left;
+        }
+        /* container for the main table and message line below */
+        #main_container #right {
+            width: 80%;
+            height: 80%;
+            padding-left: auto;
+            padding-right: 0px;
+            /* align div to the right */
+            margin-left: auto;
+        }
+
+
+    /* drag objects (DIV inside table cells) */
+    .redips-drag {
+        cursor: move;
+        margin: auto;
+        z-index: 10;
+        color: #222;
+        text-align: center;
+        font-size: 10pt; /* needed for cloned object */
+        opacity: 0.7;
+        filter: alpha(opacity=70);
+        /* without width, IE6/7 will not apply filter/opacity to the element ?! */
+        /* IE needs element layout */
+        width: 120px;
+        height: 80px;
+        line-height: 20px;
+        /* border */
+        border: 1px solid #555;
+        /* round corners */
+        border-radius: 3px;
+        -moz-border-radius: 3px; /* FF */
+    }
+
+
+    /* tables */
+    div#redips-drag table {
+        background-color: #202020;
+        border-collapse: collapse;
+    }
+    /* timetable */
+    div#drag #table2 {
+        /* align table to the right */
+        margin-left: auto;
+        background-color: #202020;
+    }
+
+
+    /* table cells */
+    div#redips-drag td {
+        border-style: solid;
+        border-width: 1px;
+        border-color: #202020;
+        height: 80px;
+        width: 120px;
+        height: 80px;
+        text-align: center;
+        font-size: 10pt;
+        padding: 2px;
+    }
+    /* overwrite border settings for left tables */
+    /* set all borders to 0px except border-bottom */
+    div#redips-drag #table1 td {
+        border-width: 1px 1px 1px 1px;
+    }
+    /* styles for clone DIV elements in left table */
+    div#redips-drag #table1 div {
+        margin-left: 5px;
+        float: left;
+        color: black;
+    }
+    /* define styles for buttons */
+    div#redips-drag #table1 input {
+        float: right;
+        width: 15px;
+        height: 23px;
+        margin-right: 5px;
+        border-width: 1px;
+        /* round corners */
+        border-radius: 3px;
+        /* default visibility is hidden */
+        visibility: hidden;
+    }
+
+
+    /* subject colors */
+    .ar {
+        background-color: #AAC8E2;
+        /*width: 90px;
+	height: 30px;*/
+    }
+
+    .bi {
+        background-color: #E7D783;
+    }
+
+    .ch {
+        background-color: #E99AE6;
+    }
+
+    .en {
+        background-color: #C4AFFF;
+    }
+
+    .et {
+        background-color: #91DEC5;
+    }
+
+    .hi {
+        background-color: #CFE17F;
+    }
+
+    .it {
+        background-color: #E7BD83;
+    }
+
+    .ma {
+        background-color: #FFC5C2;
+    }
+
+    .ph {
+        background-color: #A5F09D;
+    }
+
+
+
+    /* blank cells (upper left corner) */
+    .blank {
+        background-color: white;
+    }
+
+
+
+    /* trash cell */
+    .redips-trash {
+        color: white;
+        background-color: #6386BD;
+    }
+
+
+    /* message line */
+    #message {
+        color: red;
+        background-color: #aaa;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+
+    /* dark cells (first column and table header) */
+    .dark {
+        color: #444;
+        background-color: #e0e0e0;
+    }
+
+    .button_container {
+        padding-top: 10px;
+        text-align: center;
+    }
+
+        /* "Save" button */
+        .button_container input {
+            background-color: #6A93D4;
+            color: white;
+            border-width: 1px;
+            width: 40px;
+            padding: 0px;
+        }
+
+</style>
+<script type="text/javascript" src="~/js/redips-drag-min.js"></script>
+<div id="main_container">
+    <!-- tables inside this DIV could have draggable content -->
+    <div id="redips-drag">
+
+        <!-- left container (table with subjects) -->
+        <div id="left">
+            <table id="table1">
+                <colgroup>
+                    <col width="190" />
+                </colgroup>
+                <tbody>
+                    <tr><td class="dark"><div class="redips-drag redips-clone ar"><div id="ar">Living room</div><div style="height = 20px; background-color = white"></div></div><input id="b_ar" class="ar" type="button" value="" onclick="redips.report('ar')" title="Show only Arts" /></td></tr>
+                    <tr><td class="dark"><div id="bi" class="redips-drag redips-clone bi">Kitchen</div><input id="b_bi" class="bi" type="button" value="" onclick="redips.report('bi')" title="Show only Biology" /></td></tr>
+                    <tr><td class="dark"><div id="ch" class="redips-drag redips-clone ch">Bathroom</div><input id="b_ch" class="ch" type="button" value="" onclick="redips.report('ch')" title="Show only Chemistry" /></td></tr>
+                    <tr><td class="dark"><div id="en" class="redips-drag redips-clone en">WC</div><input id="b_en" class="en" type="button" value="" onclick="redips.report('en')" title="Show only English" /></td></tr>
+                    <tr><td class="dark"><div id="et" class="redips-drag redips-clone et">Movement</div><input id="b_et" class="et" type="button" value="" onclick="redips.report('et')" title="Show only Ethics" /></td></tr>
+                    <tr><td class="dark"><div id="hi" class="redips-drag redips-clone hi">Lamp On</div><input id="b_hi" class="hi" type="button" value="" onclick="redips.report('hi')" title="Show only History" /></td></tr>
+                    <tr><td class="dark"><div id="it" class="redips-drag redips-clone it">Lamp Off</div><input id="b_it" class="it" type="button" value="" onclick="redips.report('it')" title="Show only IT" /></td></tr>
+                    <tr><td class="dark"><div id="ma" class="redips-drag redips-clone ma">Heating</div><input id="b_ma" class="ma" type="button" value="" onclick="redips.report('ma')" title="Show only Mathematics" /></td></tr>
+                    <tr><td class="dark"><div id="ph" class="redips-drag redips-clone ph">Cooling</div><input id="b_ph" class="ph" type="button" value="" onclick="redips.report('ph')" title="Show only Physics" /></td></tr>
+                    <tr><td class="redips-trash" title="Trash">Trash</td></tr>
+                </tbody>
+            </table>
+        </div><!-- left container -->
+        <!-- right container -->
+        <div id="right">
+            <table id="table2">
+                <colgroup>
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="100" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <!-- if checkbox is checked, clone school subjects to the whole table row  -->
+                        <!--<td class="redips-mark blank">
+                            <input id="week" type="checkbox" title="Apply school subjects to the week" checked/>
+                            <input id="report" type="checkbox" title="Show subject report"/>
+                        </td>-->
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                    </tr>
+                    <tr>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div><!-- right container -->
+    </div><!-- drag container -->
+    <div id="message">Drag the squares  to the table (clone square with SHIFT key)</div>
+</div><!-- main container -->
+ <script>
+     var redips = {};
+
+
+     // redips initialization
+     redips.init = function () {
+         // reference to the REDIPS.drag object
+         var rd = REDIPS.drag;
+         // initialization
+         rd.init();
+         // REDIPS.drag settings
+         rd.dropMode = 'single';			// dragged elements can be placed only to the empty cells
+         rd.hover.colorTd = '#9BB3DA';	// set hover color
+         rd.clone.keyDiv = true;			// enable cloning DIV elements with pressed SHIFT key
+         // prepare node list of DIV elements in table2
+         redips.divNodeList = document.getElementById('table2').getElementsByTagName('div');
+         // show / hide report buttons (needed for dynamic version - with index.php)
+         redips.reportButton();
+         // element is dropped
+         rd.event.dropped = function () {
+             var objOld = rd.objOld,					// original object
+                 targetCell = rd.td.target,			// target cell
+                 targetRow = targetCell.parentNode,	// target row
+                 i, objNew;							// local variables
+             // if checkbox is checked and original element is of clone type then clone spread subjects to the week
+             if (document.getElementById('week').checked === true && objOld.className.indexOf('redips-clone') > -1) {
+                 // loop through table cells
+                 for (i = 0; i < targetRow.cells.length; i++) {
+                     // skip cell if cell has some content (first column is not empty because it contains label)
+                     if (targetRow.cells[i].childNodes.length > 0) {
+                         continue;
+                     }
+                     // clone DIV element
+                     objNew = rd.cloneObject(objOld);
+                     // append to the table cell
+                     targetRow.cells[i].appendChild(objNew);
+                 }
+             }
+             // print message only if target and source table cell differ
+             if (rd.td.target !== rd.td.source) {
+                 redips.printMessage('Content has been changed!');
+             }
+             // show / hide report buttons
+             redips.reportButton();
+         };
+
+         // after element is deleted from the timetable, print message
+         rd.event.deleted = function () {
+             redips.printMessage('Content has been deleted!');
+             // show / hide report buttons
+             redips.reportButton();
+         };
+
+
+         // if any element is clicked, then make all subjects in timetable visible
+         rd.event.clicked = function () {
+             redips.showAll();
+         };
+
+     };
+
+
+     // save elements and their positions
+     redips.save = function () {
+         // scan timetable content
+         var content = REDIPS.drag.saveContent('table2');
+         // and save content
+         window.location.href = 'db_save.php?' + content;
+     };
+
+
+
+
+
+     // method shows subject occurring in timetable
+     redips.report = function (subject) {
+         // define day and time labels
+         var day = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+             time = ['08:00', '09:00', '10:00', '11:00', '12:00',
+                 '13:00', '14:00', '15:00', '16:00'],
+             div = [],	// define array
+             cellIndex,	// cell index
+             rowIndex,	// row index
+             id,			// element id
+             i,			// loop variable
+             num = 0,	// number of found subject
+             str = '';	// result string
+         // show all elements
+         redips.showAll();
+         // create array from node list (node list is global variable)
+         for (i = 0; i < redips.divNodeList.length; i++) {
+             div[i] = redips.divNodeList[i];
+         }
+         // sort div elements by the cellIndex (days in week) and rowIndex (hours)
+         div.sort(function (a, b) {
+             var a_ci = a.parentNode.cellIndex,				// a element cell index
+                 a_ri = a.parentNode.parentNode.rowIndex,	// a element row index
+                 b_ci = b.parentNode.cellIndex,				// b element cell index
+                 b_ri = b.parentNode.parentNode.rowIndex;	// b element row index
+             return a_ci * 100 + a_ri - (b_ci * 100 + b_ri);
+         });
+         // loop goes through all collected elements
+         for (i = 0; i < div.length; i++) {
+             // define only first two letters of ID
+             // (cloned elements have appended c1, c2, c3 ...)
+             id = div[i].id.substr(0, 2);
+             // if id is equal to the passed subject then we have a match
+             if (id === subject) {
+                 // define cell index
+                 cellIndex = div[i].parentNode.cellIndex;
+                 // table row is parent element of table cell 
+                 rowIndex = div[i].parentNode.parentNode.rowIndex;
+                 // add line with found element
+                 str += day[cellIndex - 1] + '\t\t' + time[rowIndex - 1] + '\n';
+                 // increase counter
+                 num++;
+             }
+             // other elements should be hidden
+             else {
+                 div[i].style.visibility = 'hidden';
+             }
+         }
+         // if "Show report" is checked then show message
+         if (document.getElementById('report').checked === true) {
+             // alert is placed inside setTimeout because alert() is synchronous functions causing a pause in the code and this pause should be bypassed
+             setTimeout(function () {
+                 alert('Number of found subjects: ' + num + '\n' + str);
+             }, 200);
+         }
+     };
+
+
+     // show/hide report buttons
+     redips.reportButton = function () {
+         var id,			// element id
+             i,			// loop variable
+             count,		// number of subjects in timetable
+             style,		// hidden or visible
+             // prepare subjects
+             subject = { 'en': 0, 'ph': 0, 'ma': 0, 'bi': 0, 'ch': 0, 'it': 0, 'ar': 0, 'hi': 0, 'et': 0 };
+         // loop goes through all collected elements
+         for (i = 0; i < redips.divNodeList.length; i++) {
+             // define only first two letters of ID
+             // (cloned elements have appended c1, c2, c3 ...)
+             id = redips.divNodeList[i].id.substr(0, 2);
+             // increase subject occurring
+             subject[id]++;
+         }
+         // loop through subjects
+         for (i in subject) {
+             // using the hasOwnProperty method to distinguish the true members of the object
+             if (subject.hasOwnProperty(i)) {
+                 // prepare id of the report button
+                 id = 'b_' + i;
+                 // subject count on the timetable
+                 count = subject[i];
+                 if (count === 0) {
+                     style = 'hidden';
+                 }
+                 else {
+                     style = 'visible';
+                 }
+                 // hide or show report button
+                 document.getElementById(id).style.visibility = style;
+             }
+         }
+     };
+
+
+     // print message
+     redips.printMessage = function (message) {
+         document.getElementById('message').innerHTML = message;
+     };
+
+
+     // function show all subjects in timetable
+     redips.showAll = function () {
+         var i; // loop variable
+         for (i = 0; i < redips.divNodeList.length; i++) {
+             redips.divNodeList[i].style.visibility = 'visible';
+         }
+     };
+
+
+     // add onload event listener
+     if (window.addEventListener) {
+         window.addEventListener('load', redips.init, false);
+     }
+     else if (window.attachEvent) {
+         window.attachEvent('onload', redips.init);
+     }
+
+ </script>

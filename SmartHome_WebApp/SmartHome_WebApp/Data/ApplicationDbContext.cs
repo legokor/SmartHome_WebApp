@@ -5,14 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeWebApp.Models;
+using SmartHome_WebApp.Models;
 
 namespace SmartHomeWebApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public ApplicationDbContext():base()
+        {
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -22,5 +28,13 @@ namespace SmartHomeWebApp.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        #region ContainedMembers
+
+        public DbSet<Design> Designs { get; set; }
+        public DbSet<DataSample> DataSamples { get; set; }
+        public DbSet<BuildingBlock> BuildingBlocks { get; set; }
+
+        #endregion
     }
 }

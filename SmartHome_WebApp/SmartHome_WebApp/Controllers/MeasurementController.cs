@@ -17,9 +17,22 @@ namespace SmartHome_WebApp.Controllers
         public MeasurementController(RepositoryService repository)
         {
             _repository = repository;
+            _repository.DataSamples.Add(
+                new DataSample {
+                    CoLevel = 1.2,
+                    Humidity = 39,
+                    Temperature = 25,
+                    SmokeLevel = 6.0,
+                    Movement = 1,
+                    LpgLevel = 0.002,
+                    SenderId = 1123123123,
+                    TimeStamp = DateTime.Now,
+                    SamplingId = new Guid()
+                });
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> SaveData([FromBody] DataSample measurement)
         {
             //Check if the model is valid
@@ -38,7 +51,7 @@ namespace SmartHome_WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ReadMeasurements(int Id)
+        public async Task<IActionResult> ReadMeasurements(string Id)
         {
             //If no Id was provided
             if(Id == null)
@@ -46,9 +59,9 @@ namespace SmartHome_WebApp.Controllers
                 return new BadRequestResult();
             }
 
-            var result = await _repository.DataSamples.Find(wer => wer.SenderId == Id);
+            var result = await _repository.DataSamples.Find(wer => wer.SamplingId == Guid.Parse(Id));
 
-            return View(result);
+            return new JsonResult(result);
         }
     }
 }

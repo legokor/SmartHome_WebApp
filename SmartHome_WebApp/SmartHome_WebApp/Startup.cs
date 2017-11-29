@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartHomeWebApp.Data;
 using SmartHomeWebApp.Models;
 using SmartHomeWebApp.Services;
+using SmartHome_WebApp.Data;
 
 namespace SmartHomeWebApp
 {
@@ -39,6 +40,8 @@ namespace SmartHomeWebApp
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddScoped<RepositoryService, RepositoryService>();
 
             services.AddMvc();
         }

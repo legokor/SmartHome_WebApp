@@ -6,27 +6,23 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeWebApp.Models;
 using SmartHome_WebApp.Models;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 namespace SmartHomeWebApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext():base()
+        private static DbContextOptions<ApplicationDbContext> _connOptions;
+
+        public ApplicationDbContext() : base(_connOptions)
         {
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            _connOptions = options;
             Database.Migrate();
-        }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
         }
 
         #region ContainedMembers
@@ -36,5 +32,14 @@ namespace SmartHomeWebApp.Data
         public DbSet<BuildingBlock> BuildingBlocks { get; set; }
 
         #endregion
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            // Customize the ASP.NET Identity model and override the defaults if needed.
+            // For example, you can rename the ASP.NET Identity table names and more.
+            // Add your customizations after calling base.OnModelCreating(builder);
+        }
+
     }
 }

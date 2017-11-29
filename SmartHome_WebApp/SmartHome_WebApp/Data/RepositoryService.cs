@@ -11,6 +11,13 @@ namespace SmartHome_WebApp.Data
     public class RepositoryService
     {
 
+        public RepositoryService()
+        {
+            DataSamples = new DataSampleRepository();
+            Desings = new DesignRepository();
+            BuildingBlocks = new BuildingBlockRepository();
+        }
+
         public DataSampleRepository DataSamples { get; set; }
 
         public DesignRepository Desings { get; set; }

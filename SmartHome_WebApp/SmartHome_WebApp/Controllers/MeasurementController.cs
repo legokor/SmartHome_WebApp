@@ -36,5 +36,19 @@ namespace SmartHome_WebApp.Controllers
 
             return new OkResult();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ReadMeasurements(int Id)
+        {
+            //If no Id was provided
+            if(Id == null)
+            {
+                return new BadRequestResult();
+            }
+
+            var result = await _repository.DataSamples.Find(wer => wer.SenderId == Id);
+
+            return View(result);
+        }
     }
 }

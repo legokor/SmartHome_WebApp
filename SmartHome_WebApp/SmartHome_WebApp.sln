@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome_WebApp", "SmartHome_WebApp\SmartHome_WebApp.csproj", "{2E5793F6-16CC-4DCD-A64E-FD11F543EA5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Persistence", "SmartHome.Persistence\SmartHome.Persistence.csproj", "{41F24670-48E8-49C6-931E-1F7DE0FE71C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Model", "SmartHome.Model\SmartHome.Model.csproj", "{B612B067-8F6C-4EEC-A265-4E5BFC73E6F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Dto", "SmartHome.Dto\SmartHome.Dto.csproj", "{F7FEEE1E-B7A0-4A48-BFEE-AB650ED0D08A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.WebApp", "SmartHome.WebApp\SmartHome.WebApp.csproj", "{783ED701-0FAF-4D03-A3DA-E7AD9E062ED8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +17,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2E5793F6-16CC-4DCD-A64E-FD11F543EA5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E5793F6-16CC-4DCD-A64E-FD11F543EA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E5793F6-16CC-4DCD-A64E-FD11F543EA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E5793F6-16CC-4DCD-A64E-FD11F543EA5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41F24670-48E8-49C6-931E-1F7DE0FE71C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41F24670-48E8-49C6-931E-1F7DE0FE71C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41F24670-48E8-49C6-931E-1F7DE0FE71C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41F24670-48E8-49C6-931E-1F7DE0FE71C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B612B067-8F6C-4EEC-A265-4E5BFC73E6F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B612B067-8F6C-4EEC-A265-4E5BFC73E6F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B612B067-8F6C-4EEC-A265-4E5BFC73E6F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B612B067-8F6C-4EEC-A265-4E5BFC73E6F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7FEEE1E-B7A0-4A48-BFEE-AB650ED0D08A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7FEEE1E-B7A0-4A48-BFEE-AB650ED0D08A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7FEEE1E-B7A0-4A48-BFEE-AB650ED0D08A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7FEEE1E-B7A0-4A48-BFEE-AB650ED0D08A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{783ED701-0FAF-4D03-A3DA-E7AD9E062ED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{783ED701-0FAF-4D03-A3DA-E7AD9E062ED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{783ED701-0FAF-4D03-A3DA-E7AD9E062ED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{783ED701-0FAF-4D03-A3DA-E7AD9E062ED8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A9008393-2711-48D8-8D01-45E9D182C54D}
+		SolutionGuid = {424DD433-AD52-4CBE-B389-2BBD5A31CACA}
 	EndGlobalSection
 EndGlobal

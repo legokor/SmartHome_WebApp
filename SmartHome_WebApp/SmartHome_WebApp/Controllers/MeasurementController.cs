@@ -17,18 +17,6 @@ namespace SmartHome_WebApp.Controllers
         public MeasurementController(RepositoryService repository)
         {
             _repository = repository;
-            _repository.DataSamples.Add(
-                new DataSample {
-                    CoLevel = 1.2,
-                    Humidity = 39,
-                    Temperature = 25,
-                    SmokeLevel = 6.0,
-                    Movement = 1,
-                    LpgLevel = 0.002,
-                    SenderId = 1123123123,
-                    TimeStamp = DateTime.Now,
-                    SamplingId = new Guid()
-                });
         }
 
         [HttpPost]

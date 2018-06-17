@@ -17,12 +17,12 @@ namespace SmartHome.Persistence.Repositories
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    var user = await context.Users.SingleOrDefaultAsync(wer => wer.UserName == newElement.Owner.UserName);
+                    var user = await context.Users.SingleOrDefaultAsync(wer => wer.UserName == newElement.User.UserName);
                     if(user == null)
                     {
                         return false;
                     }
-                    newElement.Owner = user;
+                    newElement.User = user;
                     await context.MasterUnits.AddAsync(newElement);
                     //Checking if the saving method succeeds
                     if (await context.SaveChangesAsync() < 1)
@@ -90,7 +90,7 @@ namespace SmartHome.Persistence.Repositories
                 {
                     var result = await context.MasterUnits.FirstAsync(f => 
                     f.Id == toModify.Id
-                    && f.Owner.Id == toModify.Owner.Id
+                    && f.User.Id == toModify.User.Id
                     );
 
                     //Check if the element we need is i  the database
@@ -121,7 +121,7 @@ namespace SmartHome.Persistence.Repositories
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    var result = await context.MasterUnits.FirstAsync(wer => toDelete.Id == wer.Id && toDelete.Owner.Id == wer.Owner.Id);
+                    var result = await context.MasterUnits.FirstAsync(wer => toDelete.Id == wer.Id && toDelete.User.Id == wer.User.Id);
 
                     //Check if the element we need is i  the database
                     if (result == null)

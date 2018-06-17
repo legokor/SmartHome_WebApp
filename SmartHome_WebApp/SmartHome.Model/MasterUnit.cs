@@ -16,8 +16,13 @@ namespace SmartHome.Model
         public bool IsOn { get; set; }
 
         [Required]
-        public User Owner { get; set; }
+        public User User { get; set; }
+
+        [Required]
+        public Guid UserId { get; set; }
 
         public List<DataSample> DataSamples { get; set; }
+
+        public Guid ConcurrencyLock { get; set; }
     }
 }

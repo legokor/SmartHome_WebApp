@@ -49,6 +49,7 @@ namespace SmartHome.WebApp
                 .AddAspNetIdentity<User>();
 
             services.AddScoped<RepositoryService, RepositoryService>();
+            services.AddScoped<IRepositoryService, RepositoryService>();
 
             services.AddMvc();
         }

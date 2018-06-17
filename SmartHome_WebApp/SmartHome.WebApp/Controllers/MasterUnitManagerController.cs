@@ -14,10 +14,10 @@ namespace SmartHome.WebApp.Controllers
     [Route("api/v1/masterunit")]
     public class MasterUnitManagerController : Controller
     {
-        private readonly RepositoryService _repository;
+        private readonly IRepositoryService _repository;
         private readonly UserManager<User> _userManager;
 
-        public MasterUnitManagerController(RepositoryService repository, UserManager<User> userManager)
+        public MasterUnitManagerController(IRepositoryService repository, UserManager<User> userManager)
         {
             _repository = repository;
             _userManager = userManager;

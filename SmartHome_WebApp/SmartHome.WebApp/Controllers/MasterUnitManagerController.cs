@@ -62,7 +62,7 @@ namespace SmartHome.WebApp.Controllers
             }
 
             newMasterUnit.Id = id;
-            return new CreatedResult($"api/v1/{id}", newMasterUnit);
+            return new CreatedResult($"api/v1/masterunit/{id}", newMasterUnit);
         }
 
         [HttpGet("{id}")]
@@ -96,7 +96,7 @@ namespace SmartHome.WebApp.Controllers
                 return Forbid();
             }
 
-            var result = await _repository.MasterUnits.FindAsync(wer => wer.User.Id == user.Id);
+            var result = await _repository.MasterUnits.FindListAsync(wer => wer.User.Id == user.Id);
 
             if (result == null)
             {
@@ -127,7 +127,12 @@ namespace SmartHome.WebApp.Controllers
 
             if(result.ConcurrencyLock != updated.eTag)
             {
-                return BadRequest();
+                var dtoList = new List<MasterUnitDto>
+                {
+                    updated,
+                    MasterUnitDto.Mapper(result)
+                };
+                return BadRequest(dtoList);
             }
 
             updated.eTag = Guid.NewGuid();

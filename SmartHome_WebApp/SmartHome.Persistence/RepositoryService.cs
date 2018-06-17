@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Persistence
 {
-    public class RepositoryService
+    public class RepositoryService: IRepositoryService
     {
 
         public RepositoryService()

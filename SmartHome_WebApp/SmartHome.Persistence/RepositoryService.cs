@@ -1,4 +1,5 @@
-﻿using SmartHome.Persistence.Repositories;
+﻿using SmartHome.Model;
+using SmartHome.Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,13 @@ namespace SmartHome.Persistence
             MasterUnits = new MasterUnitRepository();
         }
 
-        public DataSampleRepository DataSamples { get; set; }
+        public IRepository<DataSample> DataSamples { get; set; }
 
-        public DesignRepository Desings { get; set; }
+        public IRepository<Design> Desings { get; set; }
 
-        public BuildingBlockRepository BuildingBlocks { get; set; }
+        public IRepository<BuildingBlock> BuildingBlocks { get; set; }
 
-        public MasterUnitRepository MasterUnits { get; set; }
+        public IRepository<MasterUnit> MasterUnits { get; set; }
 
     }
 }

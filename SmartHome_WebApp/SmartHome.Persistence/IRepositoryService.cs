@@ -1,16 +1,16 @@
-﻿using SmartHome.Persistence.Repositories;
+﻿using SmartHome.Model;
+using SmartHome.Persistence.Repositories;
 
 namespace SmartHome.Persistence
 {
     public interface IRepositoryService
     {
-        DataSampleRepository DataSamples { get; set; }
+        IRepository<DataSample> DataSamples { get; set; }
 
-        DesignRepository Desings { get; set; }
+        IRepository<Design> Desings { get; set; }
 
-        BuildingBlockRepository BuildingBlocks { get; set; }
+        IRepository<BuildingBlock> BuildingBlocks { get; set; }
 
-        MasterUnitRepository MasterUnits { get; set; }
-
+        IRepository<MasterUnit> MasterUnits { get; set; }
     }
 }

@@ -48,7 +48,9 @@ namespace SmartHome.WebApp.Controllers
             {
                 Id = id,
                 CustomName = newMasterUnit.CustomName,
-                Owner = user,
+                User = user,
+                UserId = user.Id,
+                ConcurrencyLock = Guid.NewGuid(),
                 DataSamples = null,
                 IsOn = newMasterUnit.IsOn,
                 Designs = null
@@ -73,14 +75,15 @@ namespace SmartHome.WebApp.Controllers
                 return Forbid();
             }
 
-            var result = await _repository.MasterUnits.FindAsync(wer => wer.Id == id && wer.Owner.Id == user.Id);
+            var result = await _repository.MasterUnits.FindAsync(wer => wer.Id == id && wer.User.Id == user.Id);
 
             if (result == null)
             {
                 return NotFound();
             }
+            var dtoResult = MasterUnitDto.Mapper(result);
 
-            return new JsonResult(result);
+            return new JsonResult(dtoResult);
         }
 
         [HttpGet]
@@ -93,14 +96,44 @@ namespace SmartHome.WebApp.Controllers
                 return Forbid();
             }
 
-            var result = await _repository.MasterUnits.FindAsync(wer => wer.Owner.Id == user.Id);
+            var result = await _repository.MasterUnits.FindAsync(wer => wer.User.Id == user.Id);
 
             if (result == null)
             {
                 return NotFound();
             }
 
-            return new JsonResult(result);
+            var dtoResult = MasterUnitDto.Mapper(result);
+
+            return new JsonResult(dtoResult);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(MasterUnitDto updated)
+        {
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+
+            if (user == null)
+            {
+                return Forbid();
+            }
+
+            var result = await _repository.MasterUnits.FindAsync(wer => wer.User.Id == user.Id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            if(result.ConcurrencyLock != updated.eTag)
+            {
+                return BadRequest();
+            }
+
+            updated.eTag = Guid.NewGuid();
+
+            var dbActionResult = await _repository.MasterUnits.ModifyAsync(MasterUnitDto.Mapper(updated, user));
+            return Ok();
         }
     }
 }

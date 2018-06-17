@@ -412,6 +412,205 @@ namespace SmartHome.ControllerTest
 
         #region Update
 
+        [Fact]
+        public async Task Update_Succeeds_Whith_Correct_Data()
+        {
+            //ARRANGE
+            Guid id = Guid.NewGuid();
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = "TestUser",
+            };
+
+            var dto = new MasterUnitDto
+            {
+                CustomName = "customName",
+                eTag = id,
+                IsOn = false,
+                OwnerId = user.Id
+            };
+
+            var masterUnit = new MasterUnit
+            {
+                CustomName = "customName",
+                ConcurrencyLock = id,
+                IsOn = false,
+                UserId = user.Id,
+                User = user
+            };
+
+            _mockUserManager
+                .Setup(set => set.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(user);
+
+            _masterUnitRepoMock
+                .Setup(set => set.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()))
+                .ReturnsAsync(masterUnit);
+
+            //  ACT
+            var result = await _controller.Update(dto);
+
+            //ASSERT
+
+            _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
+            _masterUnitRepoMock.Verify(ver => ver.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()), Times.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType<OkResult>(result);
+        }
+
+        [Fact]
+        public async Task Update_Fails_On_Concurrency()
+        {
+            //ARRANGE
+            Guid id = Guid.NewGuid();
+
+            var user = new User
+            {
+                Id = id,
+                UserName = "TestUser",
+            };
+
+            var dto = new MasterUnitDto
+            {
+                CustomName = "customName",
+                eTag = Guid.NewGuid(),
+                IsOn = false,
+                OwnerId = user.Id
+            };
+
+            var masterUnit = new MasterUnit
+            {
+                CustomName = "customName",
+                ConcurrencyLock = Guid.NewGuid(),
+                IsOn = false,
+                UserId = user.Id,
+                User = user
+            };
+
+            _mockUserManager
+                .Setup(set => set.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(user);
+
+            _masterUnitRepoMock
+                .Setup(set => set.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()))
+                .ReturnsAsync(masterUnit);
+
+            //  ACT
+            var result = await _controller.Update(dto);
+
+            //ASSERT
+
+            _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
+            _masterUnitRepoMock.Verify(ver => ver.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()), Times.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestObjectResult>(result);
+            BadRequestObjectResult castedResult = (BadRequestObjectResult)result;
+            Assert.IsAssignableFrom<IEnumerable<MasterUnitDto>>(castedResult.Value);
+            Assert.Equal(2, ((List<MasterUnitDto>)castedResult.Value).Count);
+        }
+
+        [Fact]
+        public async Task Update_Forbids_Without_Correct_User()
+        {
+            //ARRANGE
+            Guid id = Guid.NewGuid();
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = "TestUser",
+            };
+
+            var dto = new MasterUnitDto
+            {
+                CustomName = "customName",
+                eTag = id,
+                IsOn = false,
+                OwnerId = user.Id
+            };
+
+            var masterUnit = new MasterUnit
+            {
+                CustomName = "customName",
+                ConcurrencyLock = id,
+                IsOn = false,
+                UserId = user.Id,
+                User = user
+            };
+
+            _mockUserManager
+                .Setup(set => set.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(default(User));
+
+            _masterUnitRepoMock
+                .Setup(set => set.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()))
+                .ReturnsAsync(masterUnit);
+
+            //  ACT
+            var result = await _controller.Update(dto);
+
+            //ASSERT
+
+            _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
+            _masterUnitRepoMock.Verify(ver => ver.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()), Times.Never);
+
+            Assert.NotNull(result);
+            Assert.IsType<ForbidResult>(result);
+        }
+
+        [Fact]
+        public async Task Update_Fails_With_Incorrect_Data_Reference()
+        {
+            //ARRANGE
+            Guid id = Guid.NewGuid();
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = "TestUser",
+            };
+
+            var dto = new MasterUnitDto
+            {
+                CustomName = "customName",
+                eTag = id,
+                IsOn = false,
+                OwnerId = user.Id
+            };
+
+            var masterUnit = new MasterUnit
+            {
+                CustomName = "customName",
+                ConcurrencyLock = id,
+                IsOn = false,
+                UserId = user.Id,
+                User = user
+            };
+
+            _mockUserManager
+                .Setup(set => set.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(user);
+
+            _masterUnitRepoMock
+                .Setup(set => set.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()))
+                .ReturnsAsync(default(MasterUnit));
+
+            //  ACT
+            var result = await _controller.Update(dto);
+
+            //ASSERT
+
+            _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
+            _masterUnitRepoMock.Verify(ver => ver.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()), Times.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType<NotFoundResult>(result);
+        }
+
         #endregion
 
         #region Delete

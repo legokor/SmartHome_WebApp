@@ -88,10 +88,7 @@ namespace SmartHome.Persistence.Repositories
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    var result = await context.MasterUnits.FirstAsync(f => 
-                    f.Id == toModify.Id
-                    && f.User.Id == toModify.User.Id
-                    );
+                    var result = context.MasterUnits.Update(toModify);
 
                     //Check if the element we need is i  the database
                     if (result == null)
@@ -99,10 +96,8 @@ namespace SmartHome.Persistence.Repositories
                         throw new NullReferenceException("No member like the given parameter was present in the DB");
                     }
 
-                    result = toModify;
-
                     //Checking if the saving method succeeds
-                    if (await context.SaveChangesAsync() >= 1)
+                    if (await context.SaveChangesAsync() < 1)
                     {
                         throw new ApplicationException("Saving data was uncusseful!");
                     }

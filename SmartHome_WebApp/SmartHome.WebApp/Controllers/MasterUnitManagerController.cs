@@ -12,6 +12,7 @@ using SmartHome.Persistence;
 namespace SmartHome.WebApp.Controllers
 {
     [Route("api/v1/masterunit")]
+    [Authorize]
     public class MasterUnitManagerController : Controller
     {
         private readonly IRepositoryService _repository;
@@ -36,13 +37,13 @@ namespace SmartHome.WebApp.Controllers
                 return BadRequest();
             }
 
-            //var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            var user = await _userManager.FindByIdAsync(newMasterUnit.OwnerId.ToString());
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             if (user == null)
             {
                 return Forbid();
             }
 
+            newMasterUnit.OwnerId = user.Id;
             Guid id = Guid.NewGuid();
             var result = await _repository.MasterUnits.AddAsync(new MasterUnit
             {
@@ -109,7 +110,7 @@ namespace SmartHome.WebApp.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(MasterUnitDto updated)
+        public async Task<IActionResult> Update([FromBody] MasterUnitDto updated)
         {
             var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
 
@@ -118,7 +119,7 @@ namespace SmartHome.WebApp.Controllers
                 return Forbid();
             }
 
-            var result = await _repository.MasterUnits.FindAsync(wer => wer.User.Id == user.Id);
+            var result = await _repository.MasterUnits.FindAsync(wer => wer.User.Id == user.Id && wer.Id == updated.Id);
 
             if (result == null)
             {
@@ -137,8 +138,11 @@ namespace SmartHome.WebApp.Controllers
 
             updated.eTag = Guid.NewGuid();
 
-            var dbActionResult = await _repository.MasterUnits.ModifyAsync(MasterUnitDto.Mapper(updated, user));
-            return Ok();
+            if (await _repository.MasterUnits.ModifyAsync(MasterUnitDto.Mapper(updated, user)))
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
     }
 }

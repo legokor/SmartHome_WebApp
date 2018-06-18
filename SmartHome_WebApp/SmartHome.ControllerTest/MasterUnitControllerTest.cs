@@ -68,7 +68,7 @@ namespace SmartHome.ControllerTest
             };
 
             _mockUserManager
-                .Setup(set => set.FindByIdAsync(It.IsAny<string>()))
+                .Setup(set => set.FindByNameAsync(It.IsAny<string>()))
                 .ReturnsAsync(user);
 
             _masterUnitRepoMock
@@ -80,7 +80,7 @@ namespace SmartHome.ControllerTest
 
             //ASSERT
 
-            _mockUserManager.Verify(ver => ver.FindByIdAsync(id.ToString()), Times.Once);
+            _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
             _masterUnitRepoMock.Verify(ver => ver.AddAsync(It.IsAny<MasterUnit>()), Times.Once);
 
             Assert.NotNull(result);
@@ -106,7 +106,7 @@ namespace SmartHome.ControllerTest
             };
 
             _mockUserManager
-                .Setup(set => set.FindByIdAsync(It.IsAny<string>()))
+                .Setup(set => set.FindByNameAsync(It.IsAny<string>()))
                 .ReturnsAsync(default(User));
 
             _masterUnitRepoMock
@@ -118,7 +118,7 @@ namespace SmartHome.ControllerTest
 
             //ASSERT
 
-            _mockUserManager.Verify(ver => ver.FindByIdAsync(id.ToString()), Times.Once);
+            _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
             _masterUnitRepoMock.Verify(ver => ver.AddAsync(It.IsAny<MasterUnit>()), Times.Never);
 
             Assert.NotNull(result);
@@ -145,7 +145,7 @@ namespace SmartHome.ControllerTest
             };
 
             _mockUserManager
-                .Setup(set => set.FindByIdAsync(It.IsAny<string>()))
+                .Setup(set => set.FindByNameAsync(It.IsAny<string>()))
                 .ReturnsAsync(user);
 
             _masterUnitRepoMock
@@ -157,7 +157,7 @@ namespace SmartHome.ControllerTest
 
             //ASSERT
 
-            _mockUserManager.Verify(ver => ver.FindByIdAsync(id.ToString()), Times.Once);
+            _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
             _masterUnitRepoMock.Verify(ver => ver.AddAsync(It.IsAny<MasterUnit>()), Times.Once);
 
             Assert.NotNull(result);
@@ -449,6 +449,11 @@ namespace SmartHome.ControllerTest
                 .Setup(set => set.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()))
                 .ReturnsAsync(masterUnit);
 
+            _masterUnitRepoMock
+                .Setup(set => set.ModifyAsync(It.IsAny<MasterUnit>()))
+                .ReturnsAsync(true);
+
+
             //  ACT
             var result = await _controller.Update(dto);
 
@@ -456,9 +461,65 @@ namespace SmartHome.ControllerTest
 
             _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
             _masterUnitRepoMock.Verify(ver => ver.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()), Times.Once);
+            _masterUnitRepoMock.Verify(ver => ver.ModifyAsync(It.IsAny<MasterUnit>()), Times.Once);
 
             Assert.NotNull(result);
             Assert.IsType<OkResult>(result);
+        }
+
+        [Fact]
+        public async Task Update_Fails_When_Update_Fails()
+        {
+            //ARRANGE
+            Guid id = Guid.NewGuid();
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = "TestUser",
+            };
+
+            var dto = new MasterUnitDto
+            {
+                CustomName = "customName",
+                eTag = id,
+                IsOn = false,
+                OwnerId = user.Id
+            };
+
+            var masterUnit = new MasterUnit
+            {
+                CustomName = "customName",
+                ConcurrencyLock = id,
+                IsOn = false,
+                UserId = user.Id,
+                User = user
+            };
+
+            _mockUserManager
+                .Setup(set => set.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(user);
+
+            _masterUnitRepoMock
+                .Setup(set => set.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()))
+                .ReturnsAsync(masterUnit);
+
+            _masterUnitRepoMock
+                .Setup(set => set.ModifyAsync(It.IsAny<MasterUnit>()))
+                .ReturnsAsync(false);
+
+
+            //  ACT
+            var result = await _controller.Update(dto);
+
+            //ASSERT
+
+            _mockUserManager.Verify(ver => ver.FindByNameAsync(It.IsAny<string>()), Times.Once);
+            _masterUnitRepoMock.Verify(ver => ver.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<MasterUnit, bool>>>()), Times.Once);
+            _masterUnitRepoMock.Verify(ver => ver.ModifyAsync(It.IsAny<MasterUnit>()), Times.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]

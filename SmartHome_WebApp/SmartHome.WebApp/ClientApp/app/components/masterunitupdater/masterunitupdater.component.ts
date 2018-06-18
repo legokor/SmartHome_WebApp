@@ -15,6 +15,8 @@ export class MasterUnitUpdaterComponent implements OnInit, OnDestroy {
     private id: string = "";
     private route$: Subscription = new Subscription();
     public model: MasterUnit = new MasterUnit();
+    public oldModel: MasterUnit = new MasterUnit();
+    public isConflict: boolean = false;
     private baseUrl: string;
 
     constructor(private route: ActivatedRoute, private http: Http, @Inject('BASE_URL') baseUrl: string, public router: Router) {
@@ -63,7 +65,11 @@ export class MasterUnitUpdaterComponent implements OnInit, OnDestroy {
             })
             .subscribe(
                 data => this.router.navigate([MasterUnitManagerComponent]),
-                error => alert(error)
+                error => {
+                    this.isConflict = true;
+                    this.oldModel = this.model;
+                    this.readMasterUnit();
+                }
             );
     }
 

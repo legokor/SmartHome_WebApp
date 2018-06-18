@@ -14,9 +14,10 @@
                        required
                        [(ngModel)]="model.customName" name="customName"
                        #CustomName="ngModel">
-                <div [hidden]="customName.valid || customName.pristine"
+                <div *ngIf="isConflict"
                      class="alert alert-danger">
-                    Name is required
+                    Your previous modification:
+                    {{oldModel.customName}}
                 </div>
             </div>
             <button type="submit" class="btn btn-success" (click)="onSubmit()">Submit</button>

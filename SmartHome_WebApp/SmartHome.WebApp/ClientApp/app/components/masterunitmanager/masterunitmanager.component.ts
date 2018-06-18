@@ -1,34 +1,38 @@
 ﻿import { Component, NgModule, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Http } from '@angular/http';
+import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs';
+import { MasterUnit } from '../MasterUnit';
 
-export interface MasterUnit {
-    Id: string,
-    CustomName: string,
-    IsOn: boolean,
-    OwnerId: string
-}
 
 @Component({
     selector: 'masterunitmanager',
     templateUrl: './masterunitmanager.component.html'
 })
 export class MasterUnitManagerComponent {
-    public unitList: Observable<MasterUnit[]>;
+    public unitList: MasterUnit[] = [];
     private baseUrl: string;
 
-    constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string)
+    constructor(private http: Http, @Inject('BASE_URL') baseUrl: string)
     {
-        this.unitList = this.readMasterUnitList();
         this.baseUrl = baseUrl;
+        this.readMasterUnitList();
     }
 
-    createMasterUnit(unit: MasterUnit): Observable<MasterUnit> {
-        return this.http.post<MasterUnit>(this.baseUrl + 'api/v1/masterunit', unit);
-    }
-
-    readMasterUnitList(): Observable<MasterUnit[]> {
-        return this.http.get<MasterUnit[]>(this.baseUrl + 'api/v1/masterunit');
+    readMasterUnitList(): void {
+        let debug = this.unitList;
+        this.http.get(this.baseUrl + 'api/v1/masterunit')
+            .map((response) => response.json())
+            .subscribe(
+            (data) => {
+                let castedData = data as Array<MasterUnit>;
+                this.unitList = castedData.map(map => {
+                    return new MasterUnit(map.id, map.eTag, map.customName, map.isOn, map.ownerId);
+                });
+                return;
+            },
+                error => alert(error)
+        );
     }
 
 }

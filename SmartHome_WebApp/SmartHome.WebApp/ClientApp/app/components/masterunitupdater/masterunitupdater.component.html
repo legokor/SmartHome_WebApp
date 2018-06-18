@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Master Unit</h1>
+        <form #masterUnitForm="ngForm">
+            <div class="form-group">
+                <label for="customName">Name</label>
+                <input type="text" class="form-control" id="customName"
+                       required
+                       [(ngModel)]="model.customName" name="customName"
+                       #CustomName="ngModel">
+                <div [hidden]="customName.valid || customName.pristine"
+                     class="alert alert-danger">
+                    Name is required
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success" (click)="onSubmit()">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

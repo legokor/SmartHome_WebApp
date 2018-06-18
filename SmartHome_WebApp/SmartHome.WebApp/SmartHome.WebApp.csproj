@@ -25,7 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\masterunitcreator\masterunitcreator.component.ts" />
+    <None Remove="ClientApp\app\components\masterunitmanager\MasterUnit.ts" />
     <None Remove="ClientApp\app\components\masterunitmanager\masterunitmanager.component.ts" />
+    <None Remove="ClientApp\app\components\masterunitupdater\masterunitupdater.component.ts" />
     <None Remove="ClientApp\app\components\measurements\measurements.component.ts" />
   </ItemGroup>
 
@@ -35,7 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\components\MasterUnit.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\masterunitcreator\masterunitcreator.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\masterunitmanager\masterunitmanager.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\masterunitupdater\masterunitupdater.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\measurements\measurements.component.ts" />
   </ItemGroup>
 

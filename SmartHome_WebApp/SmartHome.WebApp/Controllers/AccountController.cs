@@ -66,7 +66,7 @@ namespace SmartHomeWebApp.Controllers
                     return View(model);
                 }
 
-                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, true);
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, true);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
